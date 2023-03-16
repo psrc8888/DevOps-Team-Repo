@@ -12,6 +12,10 @@ pipeline {
         }
         stage('Build') {
             steps {
+                script {
+                    currentBuild.displayName = "Current Build"
+                    currentBuild.description = "The Declarative Pipeline"
+                }
                 sh 'mvn package -f pom.xml'
             }
         }
