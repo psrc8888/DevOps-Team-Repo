@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    parameters {
+        choice(name: 'VERSION', choices: ['1.0', '1.1', '1.2'])
+        booleanParam(name: 'Run', defaultValue: true)
+    }
+    stages {
+        stage('Clone Application Code') {
+            steps {
+                git 'https://github.com/ramdevops03/Development-Team-Repo.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn package -f pom.xml'
+            }
+        }
+        
+        stage('Upload Artifact to Nexus') {
+            steps {
+                nexusArtifactUploader artifacts: [[artifactId: 'web', classifier: '', file: 'target/web.war', type: 'war']], credentialsId: 'nexuskey', groupId: 'project', nexusUrl: '34.201.31.37:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'releases', version: '2.3'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy Application Code'
+            }
+        }
+    }
+}

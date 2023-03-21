@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    def setDescription() { 
+    def item = Jenkins.instance.getItemByFullName(env.JOB_NAME) 
+    item.setDescription("Some description.") 
+    item.save()
+   }
+   setDescription()
     parameters {
         choice(name: 'VERSION', choices: ['1.0', '1.1', '1.2'], description: 'declarative pipeline')
         booleanParam(name: 'Run', defaultValue: true, description: 'boolean')
